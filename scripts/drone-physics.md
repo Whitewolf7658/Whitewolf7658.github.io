@@ -1,8 +1,10 @@
 [← Back to Home](../README.md)
 
-# UAV Flight Controller Physics Module (FlightController)
+# Drone Flight Controller Physics Module (FlightController)
 
-This module was created to handle the drones manual thrust vectors, it's angular velocities, the torque offsets, the translational flight updates, and it's ground aware landing flare calculation that is manually used to fly the drone's physics.
+This module handles the drone's manual thrust vectors, it's angular velocity, the drone's torque offsets, translational flight updates, and it's ground-aware landing flare calculations. 
+These are all then used to manually control the drone's physics during flight.
+
 
 ```lua
 local RunService = game:GetService("RunService")
