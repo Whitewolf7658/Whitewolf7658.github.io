@@ -1,6 +1,7 @@
 # Whitewolf7658
-**Contact:** [Your Discord Handle Here] | [Link Your Roblox Profile Here]  
-*My Main Focus Areas: 3D Coordinate Transformations, Physics Solvers, and Asynchronous Memory Optimizations, Additionally I love bug hunting and improving scripts as those are my strong suits.*
+**Contact:** Hwnwx/1257601320635076609 | https://www.roblox.com/users/1660464640/profile
+*Focus Areas: 3D Coordinate Space, Custom Physics, and Script Optimization.*
+*Core Strengths: Finding hidden memory leaks, cleaning up unoptimized code, and solving general and complex bugs that break game servers and more, Creating script and writing frameworks that can be scaleable.*
 
 ---
 
@@ -11,28 +12,29 @@ Instead of quitting, I decided to focus entirely on learning how programming act
 
 For almost the last three years, I have dedicated 2 to 3 hours daily (Or tried to some days) to truly understanding scripting with the help of what I see as my mentors. My routine had relied heavily on a constant loop, the first step was learning a concept that was hard for me at the time with the help of that group (Things like mapping rotated 3D spaces, calculating an exact object intersections, or handling custom physics momentum) and then consolidating my knowledge through writing a Luau code to verify my learning, I would then figure out the errors and how to fix them, and finally try translating that knowledge directly over to Roblox with the help of the group my friend introduced me to.
 
-The two systems I have documented below are built completely from scratch other than the Drone Model and the Ring Model as I do not specialize in modeling, they focus heavily on server security, my knowledge of network efficiency, and memory stability so they can work reliably within highly populated servers.
+The two systems below were built completely from scratch, with the exception of the Drone and Ring models/assets, as I don't specialize in 3D modelling (All of the scripting is entirely my own) While my mentors were a massive help in teaching me throughout the process, the actual development, debugging, and building of these systems was done by myself. Both took roughly 3–4 months of fairly intense daily coding and a lot of trial and error, especially when tracking down physics edge cases, memory leaks, and issues with server remotes. A lot of the work also went into making sure the systems weren't unnecessarily expensive to run. This included keeping networking under control, validating important actions on the server, cleaning up connections and instances properly, and making sure everything remained stable with multiple players using the systems at once.
 
 ## Project 1: The Quantum Portal System (Taken some inspiration from the Dr Strange Portal. Hence the ring)
 This is a working portal where you can actually see the other side! I built it from scratch to handle things like 3D physics momentum, player tracking across frames, and smooth rendering illusions between things called unaligned spaces.
 
 ### Showcase & Mechanics
-> 🔗 **[Click Here to Watch the Portal Gameplay Showcase](PASTE_YOUR_PORTAL_VIDEO_LINK_HERE)**
 
+> 🔗 **[Click Here to Watch the Portal Showcase](https://medal.tv/games/roblox/clips/nAEdFZa0b5uy4qNvv?invite=cr-MSxnS3ksNDI3MTQwMjg3)**
 ---
 
 ### Portal Development Logs & Solved Bottlenecks
 This system underwent multiple revisions to identify and eliminate edge cases, visual artifacts, and CPU performance drops. Below are the core technical problems solved during development:
 
-*   **Virtual Camera Obstruction:** Moving the virtual viewport camera backward to establish accurate depth perception caused it to render the back geometry of the wall holding the exit portal. Solved by writing a localized occlusion filter to hide the backing host part within that specific frame container.
-*   **Perspective Scaling Distortion:** Initial attempts to solve character framing via wide Field of View configurations (100°+) created barrel distortion. Solved by adjusting camera placement to a fixed 8-stud distance paired with a balanced 52° lens setup.
-*   **Frustum Clipping Glitch:** Because backing host walls were hidden inside the viewport, character avatars standing behind the virtual camera position were caught in the rendering field, obstructing the view window. Solved by writing an automated directional clip-plane culling track via local Z-depth calculation.
-*   **Threshold Position Flicker:** Evaluating character rendering states at a strict `Z = 0` line created visual stutter due to micro-rounding variations between frames. Solved by implementing mathematical hysteresis, mapping separated hide/show boundaries at `-0.15` and `0.15` studs.
-*   **Infinite Traversal Re-Entry:** Teleporting a player directly onto the destination plane instantly re-triggered the inverse calculation, trapping the avatar in an infinite loop. Solved by implementing a memory state and an asymmetric safety radius.
-*   **Physical Aperture Obstruction:** Solid backing geometry frequently blocked avatars even when the visual portal window was active. Solved by tracking local player coordinates to dynamically toggle collision configurations on the host part within a localized bounding box.
-*   **RenderStepped Performance Spikes:** Forcing static world geometry to update positions and properties 60+ times per second was resource-heavy. Solved by isolating permanent assets and throttling dynamic update passes down to a 30Hz accumulator register.
-*   **Global Array Scan Bottlenecks:** Sweeping the entire workspace array via deep scans every 0.5 seconds for part replication heavily lowered frame rates. Solved by discarding global searches for high-speed key-value cache tables mapping original parts straight to their cloned variants.
-*   **Voxel Mesh Blockiness:** Initial voxel terrain extraction resulted in a blocky, stepped grid appearance along smooth terrain formations. Solved by tightening extraction parameters down to a high-fidelity 4-stud surface shell while dropping hidden interior voxel grids.
+* **Virtual Camera Obstruction:** Moving the viewport camera backwards improved the depth of the portal view, but also caused the wall behind the exit portal to become visible. I fixed this by hiding the host wall only within the ViewportFrame.
+* **Perspective Distortion:** I originally tried using a much wider Field of View (100°+), but this heavily distorted the portal view. I ended up using a fixed camera distance of 8 studs with a 52° Field of View instead.
+* **Character Clipping:** Once the backing wall was hidden, characters behind the virtual camera could sometimes appear inside the portal view. I fixed this by checking their local Z position relative to the portal and excluding them when they were behind the camera.
+* **Threshold Flickering:** Using exactly `Z = 0` to switch rendering states caused flickering when the player's position moved slightly between frames. I separated the thresholds to `-0.15` and `0.15` studs so small position changes wouldn't constantly switch the state.
+* **Portal Re-Entry:** Teleporting directly onto the destination portal's plane could immediately trigger the opposite portal and send the player back through. I added a traversal state and a small safety distance before another crossing could be registered.
+* **Portal Wall Collision:** The wall containing the portal could still physically block the player even though the portal itself was visually open. I used the player's local position around the portal opening to temporarily disable the wall collision while they were passing through.
+* **RenderStepped Performance:** Updating cloned world geometry every frame became unnecessarily expensive. Static objects are now left alone after being created, while objects that actually need updates are processed separately at 30Hz.
+* **Workspace Scanning:** Earlier versions repeatedly searched through large sections of the workspace to find parts that needed updating. I replaced this with cached references between the original parts and their viewport clones, removing the need to constantly search for them again.
+* **Terrain Blockiness:** My first terrain extraction system produced noticeably stepped terrain around curved surfaces. I reduced this by using a 4-stud surface resolution and only generating the visible outer terrain instead of unnecessary interior voxels.
+
 
 ---
 
@@ -50,7 +52,7 @@ Click any of the links below to view the full, documented source files on their 
 This is a high-fidelity, physics-based flight simulation platform built from scratch. It handles manual rigid-body kinematics, real-time ground tracking, and strict server safety features to run smoothly in highly populated servers.
 
 ### Showcase & Mechanics
-> 🔗 **[Click Here to Watch the Security Drone Flight Showcase](PASTE_YOUR_DRONE_VIDEO_LINK_HERE)**
+> 🔗 **[Click Here to Watch the Security Drone Flight Showcase](https://medal.tv/games/roblox/clips/nAEjE85ifakJekGnp?invite=cr-MSw2bXIsNDI3MTQwMjg3)**
 
 ---
 
