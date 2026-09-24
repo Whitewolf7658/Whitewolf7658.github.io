@@ -2,7 +2,8 @@
 
 # Player Teleportation & Camera Handoff Client
 
-This is the client-side system I built, this was used to ensure that the transition between the portals was smooth and manageable. It also checks position changes across the frames, it then sets up a local bounding box to turn off wall collisions as you walk through, and it manages a synchronized camera handoff through a high speed engine binding so the players screen doesn't jitter.
+This is the client side system I built to help keep the transition between portals smooth and manageable. It does this by tracking the player's position between frames, it then sets up a local bounding box used to disable wall collisions while the player is passing through, and it then handles the camera handoff through RenderStepped to prevent the player's camera from jittering during the teleportation.
+
 
 ```lua
 local Players =
