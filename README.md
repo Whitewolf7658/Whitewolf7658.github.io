@@ -2,7 +2,7 @@
 
 **Contact:** Hwnwx/1257601320635076609 | https://www.roblox.com/users/1660464640/profile
 
-*Focus Areas: 3D Coordinate Spaces, Custom Physics, Script Optimization, Mathematical Systems, Physics.
+*Focus Areas: 3D Coordinate Spaces, Custom Physics, Script Optimization, Mathematical Systems, Physics.*
 
 *Core Strengths: Debugging complex systems, tracking down memory leaks and performance issues, optimizing existing code, and building scalable systems and frameworks.*
 
