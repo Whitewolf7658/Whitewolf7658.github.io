@@ -4,6 +4,7 @@
 
 This module was designed for my unified rigid transformation matrices, the relative coordinate mapping, and the continuous collision detection.
 
+```lua
 local PortalMath = {}
 local FLIP = CFrame.Angles(0, math.pi, 0)
 PortalMath.FLIP = FLIP
@@ -49,5 +50,5 @@ function PortalMath.GetExitCFrame(cf,s,d,offset)
 	return PortalMath.TransformCFrame(cf,s,d)+PortalMath.GetVisibleNormal(d)*(offset or .15)
 end
 return PortalMath
-
+```
 
