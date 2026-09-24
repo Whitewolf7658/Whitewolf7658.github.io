@@ -2,7 +2,8 @@
 
 # Math & Coordinate's Library (Or what I called it PortalMath.)
 
-This module was designed for my unified rigid transformation matrices, the relative coordinate mapping, and the continuous collision detection.
+This module is used to handle the transformation math between both portals (Portal A & Portal B), this includes CFrame, position and it's velocity transformations. It also handles the portal's coordinate mapping and it's crossing detection which is used to determine when something has actually passed through the portal.
+
 
 ```lua
 local PortalMath = {}
