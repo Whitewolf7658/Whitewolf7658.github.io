@@ -2,7 +2,8 @@
 
 # Viewport World Streaming & Terrain Extraction Client
 
-This client script runs our custom rendering pipeline inside a ViewportFrame container. It handles cloning local sections of the map, purifying instances by stripping active threads, and managing an asynchronous time-sliced batch loop so thousands of parts don't freeze the client's frame rates.
+This client script is used to handle the world rendering inside the portal's ViewportFrame. It does this by cloning nearby sections of the map into the viewport, then removing scripts and other instances that aren't needed for rendering, and afterwards processes larger groups of parts in batches so loading the portal view doesn't cause noticeable frame/performance drops.
+
 
 ```lua
 local Players = game:GetService("Players")
