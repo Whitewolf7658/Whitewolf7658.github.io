@@ -58,6 +58,6 @@ This is a high-fidelity, physics-based flight simulation platform built from scr
 Click any of the links below to view the full, documented source files on their own dedicated subpages:
 
 * 📄 **[View Source: Drone Flight Server Framework (DroneFlightServer)](./scripts/drone-server.md)**
-* 📄 **[View Source: UAV Flight Controller Physics Module (FlightController)](./scripts/drone-physics.md)**
+* 📄 **[View Source: Drone Flight Controller Physics Module (FlightController)](./scripts/drone-physics.md)**
 
 ---
