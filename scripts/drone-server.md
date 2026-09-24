@@ -2,7 +2,8 @@
 
 # Drone Flight Server Framework (DroneFlightServer)
 
-This server-side script manages our remote networking events, ownership validation tracks, authoritative player tracking, and the non-linear signal range calculations to protect our drone systems against client-side exploitation.
+This server side script handles the networking for my drone system. It manages the remote events between the client and server, furthermore it validates which player owns and controls each drone, it also keeps track of active drone sessions, and then calculates the drone's signal range. It also validates requests on the server rather than relying entirely on information sent by the client.
+
 
 ```lua
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
