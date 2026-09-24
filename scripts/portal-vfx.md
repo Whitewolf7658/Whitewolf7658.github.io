@@ -2,7 +2,9 @@
 
 # Procedural Ring Particle & Lighting Effects
 
-This is the system that drives the cinematic Doctor Strange-style entrance animations. Instead of using standard flat assets, it uses math functions to calculate circle curvatures, force spark paths to follow true physical angles, and inject chaotic noise fluctuations right as space rips open.
+This system handles the portal opening effects.
+Instead of relying entirely on pre-made particle assets since I am a scripter not a modeler or a VFX artist I am unable to make my own, in turn it uses a procedural calculation to form the circular rings, control the direction and movement of the sparks, and add then randomized variation as the portal opens.
+
 
 ```lua
 local RunService = game:GetService("RunService")
