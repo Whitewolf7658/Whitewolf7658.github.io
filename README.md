@@ -2,23 +2,27 @@
 
 **Contact:** Hwnwx/1257601320635076609 | https://www.roblox.com/users/1660464640/profile
 
-*Focus Areas: 3D Coordinate Space, Custom Physics, and Script Optimization.*
+*Focus Areas: 3D Coordinate Spaces, Custom Physics, Script Optimization, Mathematical Systems, Physics.
 
-*Core Strengths: Finding hidden memory leaks, cleaning up unoptimized code, and solving general and complex bugs that break game servers and more, Creating script and writing frameworks that can be scaleable.*
+*Core Strengths: Debugging complex systems, tracking down memory leaks and performance issues, optimizing existing code, and building scalable systems and frameworks.*
+
 
 ---
 
 ## About Me!
-When I first set out to make my very first game back in early 2023, I was quickly rudely awoken to the complex or what I thought at the time complex systems of Roblox Studio and scripting in general! I was completely clueless at the time and confused about pretty much everything! like how to use Studio's tools, how to make systems, and how to make them communicate properly. 
 
-Instead of quitting, I decided to focus entirely on learning how programming actually works. I spent countless hours trying to drill the basic concepts in, slowly I saw progress, and as I slowly got better I tried moving onto the more advanced side of development but I was struggling to learn as I frankly didn't know what to learn. I had then reached a stalemate.. I didn't know how to progress, or where to look, Eventually I reached out to close friends about what I had been doing and my interest in making my own game one day, my friend then introduced me to a group of his friends older friends who are currently in university for computer science and are highly experienced in game scripting as they do it themselves, some of them have even made both Indie games on steam and games on Roblox! They essentially became my tutors while I tried to learn, they helped by guiding me through the complex mathematical and the backend design concepts of scripting. They were a crucial part in me being where I am today.
+When I first tried making my own game back in early 2023, I was pretty quickly introduced into just how complicated Roblox Studio looked and how confusing scripting was at the time. I was completely clueless about basically everything, from using Studio properly to understanding how different systems work, how they were built and how they communicated eventually with each other.
 
-For almost the last three years, I have dedicated 2 to 3 hours daily (Or tried to some days) to truly understanding scripting with the help of what I see as my mentors. My routine had relied heavily on a constant loop, the first step was learning a concept that was hard for me at the time with the help of that group (Things like mapping rotated 3D spaces, calculating an exact object intersections, or handling custom physics momentum) and then consolidating my knowledge through writing a Luau code to verify my learning, I would then figure out the errors and how to fix them, and finally try translating that knowledge directly over to Roblox with the help of the group my friend introduced me to.
+Instead of giving up, I tried focusing on actually learning how programming/scripting worked. I decided I was going to try dedicate some time each day to learning, in turn I ended up spending countless days learning the basics and slowly started making progress, but eventually reached a point where I frankly didn't know what I was supposed to learn next, I was at a complete stalemate. After some time I decided I'd try reaching out to some friends to see if they had anything to say, and one of them ended up introducing me to a small group of experienced programmers and computer science students in university who became my mentors. They helped me understand the more difficult mathematical and backend concepts that I was struggling to learn by myself.
 
-The two systems below were built completely from scratch, with the exception of the Drone and Ring models/assets, as I don't specialize in 3D modelling (All of the scripting is entirely my own) While my mentors were a massive help in teaching me throughout the process, the actual development, debugging, and building of these systems was done by myself. Both took roughly 3–4 months of fairly intense daily coding and a lot of trial and error, especially when tracking down physics edge cases, memory leaks, and issues with server remotes. A lot of the work also went into making sure the systems weren't unnecessarily expensive to run. This included keeping networking under control, validating important actions on the server, cleaning up connections and instances properly, and making sure everything remained stable with multiple players using the systems at once.
+For almost the last three years, I've tried to dedicate around 2–3 hours a day to improving my scripting. Most of my learning follows the same process: learn a concept, try implementing it myself in Luau, find what I've done wrong, debug it, and then apply it to an actual Roblox system, Then try again. This is how I've worked through things like rotated 3D spaces, object intersections, custom physics and momentum.
 
-## Project 1: The Quantum Portal System (Taken some inspiration from the Dr Strange Portal. Hence the ring)
-This is a working portal where you can actually see the other side! I built it from scratch to handle things like 3D physics momentum, player tracking across frames, and smooth rendering illusions between things called unaligned spaces.
+The two systems below are the result of that process. With the exception of the Drone and Ring models/assets, all of the scripting is my own. My mentors were a massive help in teaching me, but the actual implementation and debugging was done entirely by me. Both projects took roughly 3–4 months of development, with a lot of that time spent dealing with physics edge cases, networking, memory leaks and the performance problems.
+
+*I also created the SFX for both the Portal and Drone.*
+
+## Project 1: The Quantum Portal System (Taken some inspiration from the Dr Strange Portal, hence the ring)
+This is a working portal where you can actually see the other side! I built it from scratch to handle things like 3D physics momentum, player tracking across frames, and smooth rendering illusions between things called unaligned spaces. 
 
 ### Showcase & Mechanics
 
@@ -28,21 +32,21 @@ This is a working portal where you can actually see the other side! I built it f
 ### Portal Development Logs & Solved Bottlenecks
 This system underwent multiple revisions to identify and eliminate edge cases, visual artifacts, and CPU performance drops. Below are the core technical problems solved during development:
 
-* **Virtual Camera Obstruction:** Moving the viewport camera backwards improved the depth of the portal view, but also caused the wall behind the exit portal to become visible. I fixed this by hiding the host wall only within the ViewportFrame.
-* **Perspective Distortion:** I originally tried using a much wider Field of View (100°+), but this heavily distorted the portal view. I ended up using a fixed camera distance of 8 studs with a 52° Field of View instead.
-* **Character Clipping:** Once the backing wall was hidden, characters behind the virtual camera could sometimes appear inside the portal view. I fixed this by checking their local Z position relative to the portal and excluding them when they were behind the camera.
-* **Threshold Flickering:** Using exactly `Z = 0` to switch rendering states caused flickering when the player's position moved slightly between frames. I separated the thresholds to `-0.15` and `0.15` studs so small position changes wouldn't constantly switch the state.
-* **Portal Re-Entry:** Teleporting directly onto the destination portal's plane could immediately trigger the opposite portal and send the player back through. I added a traversal state and a small safety distance before another crossing could be registered.
+* **Virtual Camera Obstruction:** Moving the viewport camera backwards improved the depth of the portal view as I had intended it to do, but it also caused the wall behind the portal in which I was exiting out of to become visible. After some testing I fixed this by hiding the host wall only within the ViewportFrame.
+* **Perspective Distortion:** I originally tried using a much wider Field of View (100°+) to make it seem like the character was actually infront of the portal, but this heavily distorted the portal view. I ended up using a fixed camera distance of 8 studs with a 52° Field of View instead, I tried it again and achieved the look I was wanting.
+* **Character Clipping:** Once the backing wall was hidden, characters behind the camera used for the portal could sometimes appear inside the portal view. I fixed this by checking their local Z position relative to the portal and then excluding them when they were behind the camera.
+* **Threshold Flickering:** While experimenting I used exactly `Z = 0` to switch rendering states, this caused flickering when the player's position moved slightly between frames. After multiple failed attempts on fixing it, I separated the thresholds to `-0.15` and `0.15` studs so small position changes wouldn't constantly switch the state.
+* **Portal Re-Entry:** Teleporting directly onto the destination portal's plane could sometimes immediately trigger the opposite portal and send the player back through. To fix this I added a traversal state and a small safety distance before another crossing could be registered properlly.
 * **Portal Wall Collision:** The wall containing the portal could still physically block the player even though the portal itself was visually open. I used the player's local position around the portal opening to temporarily disable the wall collision while they were passing through.
 * **RenderStepped Performance:** Updating cloned world geometry every frame became unnecessarily expensive. Static objects are now left alone after being created, while objects that actually need updates are processed separately at 30Hz.
 * **Workspace Scanning:** Earlier versions repeatedly searched through large sections of the workspace to find parts that needed updating. I replaced this with cached references between the original parts and their viewport clones, removing the need to constantly search for them again.
-* **Terrain Blockiness:** My first terrain extraction system produced noticeably stepped terrain around curved surfaces. I reduced this by using a 4-stud surface resolution and only generating the visible outer terrain instead of unnecessary interior voxels.
+* **Terrain Blockiness:** When I attempted to implement the ability to view terrain in the Portal, I tried to create a terrain extraction system. My first attempted produced noticeably stepped terrain around curved surfaces. I stepped in and reduced this by using a 4-stud surface resolution and only generated the visible outer terrain instead of unnecessary interior voxels.
 
 
 ---
 
 ###  Portal System Source Code
-Click any of the links below to view the full, documented source files on their own dedicated subpages:
+Click any of the links below to view some the main full scripts used in the creation of the Portal system.
 
 * 📄 **[View Source: Math & Coordinate Matrix Library (PortalMath)](./scripts/portal-math.md)**
 * 📄 **[View Source: Player Teleportation & Camera Handoff Client](./scripts/portal-traversal.md)**
@@ -51,8 +55,8 @@ Click any of the links below to view the full, documented source files on their 
 
 ---
 
-## Project 2: Optimized Security UAV (Drone System)
-This is a high-fidelity, physics-based flight simulation platform built from scratch. It handles manual rigid-body kinematics, real-time ground tracking, and strict server safety features to run smoothly in highly populated servers.
+## Project 2: Optimized Security Drone (Drone System)
+I created an accurate, physics based drone platform built from scratch. The system controls manual rigid body kinematics, a real time ground tracking feature, and strict server safety features to ensure the drone runs smoothly in active servers.
 
 ### Showcase & Mechanics
 > 🔗 **[Click Here to Watch the Security Drone Flight Showcase](https://medal.tv/games/roblox/clips/nAEjE85ifakJekGnp?invite=cr-MSw2bXIsNDI3MTQwMjg3)**
@@ -61,20 +65,20 @@ This is a high-fidelity, physics-based flight simulation platform built from scr
 
 ### Drone Development Logs & Solved Bottlenecks
 
-* **Duplicate Flashlight Input:** The floodlight was originally being controlled by both the flight and camera scripts, which caused inconsistent toggling when `F` was pressed. I removed the duplicate input handling and made the camera client the only script responsible for flashlight input.
-* **Flashlight Response Delay:** The floodlight originally waited for the server state to replicate before visually turning on, which made it feel slightly delayed. I added local prediction so the light turns on immediately, while the server still validates and controls its actual state.
-* **Packed Drone Controls:** Because the same drone instance is stored in `ReplicatedStorage` when packed, the camera and flight scripts could still hold references to it and respond to inputs. I added deployment checks so the camera, flight and accessory controls only work while the drone is deployed in `Workspace`.
-* **Server-Side Command Validation:** Disabling the controls on the client wasn't enough, since remote events could still be fired while the drone was packed. I added the same deployment checks on the server so flight, look and command inputs are ignored unless the drone is currently deployed.
-* **Drone State Persistence:** Packing the drone could leave values such as pilot ownership, precision mode, floodlight state and laser state active. I added a full state reset when the drone is packed so none of these values carry over into the next deployment.
-* **Deployer Inventory Duplication:** After placing the drone, the deployer could sometimes remain in the player's inventory because the removal system relied on a specific Tool name. I changed it to identify the deployer using both its name and placement script, then remove the correct Tool after deployment.
-* **Deployer Restoration:** Packing the drone originally tried to restore a hard-coded `StarterPack.DroneDeployer`, which would fail if the actual Tool had a different name. I changed the system to cache the real deployer Tool and restore that version when the drone is packed.
-* **Redeployment Position Mismatch:** The placement preview and server originally calculated the drone's final position separately, which could make the deployed position slightly different from the preview. I changed it so the exact preview transform is sent to the server, with the server applying the same ground offset when placing the drone.
-* **Residual Movement After Redeployment:** Because the packed drone reuses the same physical model, it could keep small amounts of linear or angular velocity from its previous flight. I now clear its assembly velocities before and after redeployment so it can't drift or jump away from where it was placed.
-* **Old Position Flash:** Moving a stored drone back into `Workspace` could briefly show it at its previous position before it was moved to the new one. I fixed this by positioning the drone before parenting it back into `Workspace`, then applying the final transform again afterwards.
-* **Placement Rotation Drift:** Earlier versions recalculated the preview rotation from the player's character direction every frame, meaning that simply turning the character would rotate the placement preview. I changed it so the starting direction is captured once when the deployer is equipped, and rotation only changes when `R` is pressed.
+* **Duplicate Flashlight Input:** The floodlight was originally being controlled by both the flight and camera scripts, this in turn caused an inconsistent toggling when F was pressed. To fix this I removed the duplicate input handling and made the camera client the only script responsible for the flashlight's input.
+* **Flashlight Response Delay:** The floodlight originally waited for the server state to replicate before turning on, this resulted in the light feeling slightly delayed. After seeing what might work, I added local prediction so the light turns on immediately. All while the server still validates and controls the actual state.
+* **Packed Drone Controls:** Because the same drone instance is stored in ReplicatedStorage when it is in the players inventory, the camera and flight scripts could still connect to it and respond to the inputs. I added deployment checks so the camera, flight and all accessory controls only work while the drone is in Workspace.
+* **Server-Side Command Validation:** Disabling the controls on the client wasn't enough, since remote events could still be fired while the drone was in the users inventory. I added the same deployment checks on the server so flight, look and command inputs are ignored unless the drone has run its deployment script and is inside the Workspace.
+* **Drone State Persistence:** After picking up the drone, the drone could leave values such as: Pilot ownership, precision mode, floodlight state and a laser state active. To combat this I added a full state reset when the drone is in the inventory so none of these values are to carry over into the next deployment.
+* **Deployer Inventory Duplication:** After placing the drone, the deployer could sometimes remain in the player's inventory because the removal system had relied on a specific Tool name. I changed it to identify the deployer using both its name and the placement script, then remove the correct Tool after it had been placed.
+* **Deployer Restoration:** Storing the drone originally tried to restore a hard coded StarterPack.DroneDeployer, which would fail if the actual Tool had a different name. I changed the system to cache the real deployer Tool and restore that version when the drone is in the users inventory.
+* **Redeployment Position Mismatch:** The placement preview and server originally calculated the drone's final position separately, which could make the deployed position slightly different from the preview. After checking the script, I changed it so the exact preview transform is sent to the server, with the server applying the same ground offset when placing the drone.
+* **Residual Movement After Redeployment:** Because the packed drone reuses the same physical model, it could keep small amounts of linear or angular velocity from its previous flight. To fix this, I had to clear its assembly velocities before and after redeployment so it can't drift or jump away from where it was placed.
+* **Old Position Flash:** While testing I discovered moving a stored drone back into Workspace could briefly show it at its previous position before it was moved to the new one. I fixed this by positioning the drone before parenting it back into Workspace, then applying the final transform again afterwards.
+* **Placement Rotation Drift:** In the earlier versions of the drone, It recalculated the preview rotation from the player's character direction every frame, this meant that simply turning the character would rotate the drone's placement preview. I changed it so the starting direction is captured once when the deployer is equipped, and rotation only changes when `R` is pressed.
 * **Camera Script Failure:** One version of the camera client became corrupted and stopped the drone camera system from working entirely. I restored the last working version and made the later fixes separately instead of changing several parts of the camera system at once.
-* **HUD Overlap:** Parts of the drone camera HUD overlapped Roblox's built-in menu and hotbar. I adjusted those UI elements individually instead of changing the GUI inset behaviour for the entire interface.
-* **Missing Flight Remotes:** During one revision, the deployment script accidentally replaced the actual flight server, meaning remotes such as `FlightInput` and `DroneLook` were no longer being created. I separated the deployment and flight scripts again so they each handle their own part of the system.
+* **HUD Overlap:** Parts of the drone camera HUD overlapped Roblox's built in menu and hotbar. I fixed this by changing those UI elements individually instead of changing the GUI inset behaviour for the entire interface.
+* **Missing Flight Remotes:** During one of my tests, the deployment script accidentally replaced the actual flight server, meaning that the remotes the drone was using such as FlightInput and DroneLoo` were no longer being created. Once I discovered this bug I separated the deployment and flight scripts again so they each handle their own part of the system.
 
 ---
 
@@ -88,7 +92,7 @@ Click any of the links below to view the full, documented source files on their 
 
 ## Previous Roblox Development Experience
 
-In addition to the projects demonstrated in this portfolio, I have previously contributed to other Roblox experiences that have reached substantial player audiences.
+In addition to the projects demonstrated in this portfolio, I have previously contributed to other Roblox experiences that have reached quite large player audiences.
 
 
 #### 🚜 Survive Anton Chigurh's Tractor
@@ -96,7 +100,7 @@ In addition to the projects demonstrated in this portfolio, I have previously co
 **~7.4M visits**
 https://www.roblox.com/games/124083111510656/Survive-Anton-Chigurhs-Tractor
 
-I contributed heavily to the scripting and maintenance of the game. Most of my time on the project was spent debugging existing systems, tracking down what was causing gameplay issues, fixing broken or inconsistent behaviour, and working on scripts as the game continued development.
+I contributed to the scripting and maintenance of the game. Most of my time on the project was spent debugging existing systems, tracking down what was causing gameplay issues, fixing broken or inconsistent behaviour, and working on scripts as the game continued development.
 
 I also helped troubleshoot problems that came up during testing and after changes were pushed to the game.
 
@@ -109,4 +113,4 @@ I was responsible for the large majority of the scripting behind the gun system.
 
 A significant amount of the gun system's code was written by me, with a lot of my later work going towards tracking down bugs and fixing issues with the weapon mechanics.
 
-> **Note:** I no longer have access to the Dev Studios, project files, or screenshots from either of these projects, mainly because I signed a NDA for Anton and I have deleted all data from Blood Debt Gun System from my PC. Because of this, I've listed them as previous experience rather than full portfolio showcases. The projects shown earlier in this portfolio are work that I can directly provide.
+> **Note:** I am no longer associated with either projects nor do I have access to the Dev Studios, project files, or screenshots from either of these projects, mainly because I signed an NDA for Anton and I have deleted everything I had from Blood Debt Gun System from my PC. Because of this, I've listed them as previous experience rather than full portfolio showcases. The projects shown earlier in this portfolio are work that I can directly provide.
