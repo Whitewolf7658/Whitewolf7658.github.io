@@ -1,6 +1,6 @@
 [← Back to Home](../README.md)
 
-# Math & Coordinate Matrix Library (PortalMath)
+# Math & Coordinate's Library (Or what I called it PortalMath.)
 
 This module was designed for my unified rigid transformation matrices, the relative coordinate mapping, and the continuous collision detection.
 
