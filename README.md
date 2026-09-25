@@ -17,7 +17,7 @@ Instead of giving up, I tried focusing on actually learning how programming/scri
 
 For almost the last three years, I've tried to dedicate around 2–3 hours a day to improving my scripting. Most of my learning follows the same process: learn a concept, try implementing it myself in Luau, find what I've done wrong, debug it, and then apply it to an actual Roblox system, Then try again. This is how I've worked through things like rotated 3D spaces, object intersections, custom physics and momentum.
 
-The two systems below are the result of that process. With the exception of the Drone and Ring models/assets, all of the scripting is my own. My mentors were a massive help in teaching me, but the actual implementation and debugging was done entirely by me. Both projects took roughly 3–4 months of development, with a lot of that time spent dealing with physics edge cases, networking, memory leaks and the performance problems.
+The two systems below are the result of that process. With the exception of the Drone and Ring models/assets, all of the scripting is my own. My mentors were a massive help in teaching me, but the actual implementation and debugging was done entirely by me. It took me roughly around five months of development to finish both, with a lot of that time spent dealing with physics edge cases, networking, memory leaks and performance problems.
 
 *I also created the SFX for both the Portal and Drone.*
 
