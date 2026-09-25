@@ -116,4 +116,5 @@ I was responsible for the large majority of the scripting behind the gun system.
 
 A significant amount of the gun system's code was written by me, with a lot of my later work going towards tracking down bugs and fixing issues with the weapon mechanics.
 
-> **Note:** I am no longer associated with either projects nor do I have access to the Dev Studios, project files, or screenshots from either of these projects, mainly because I signed an NDA for Anton and I have deleted everything I had from Blood Debt Gun System from my PC. Because of this, I've listed them as previous experience rather than full portfolio showcases. The projects shown earlier in this portfolio are work that I can directly provide.
+> **Note:** I am no longer associated with either projects nor do I have access to the Dev Studios, project files, or screenshots from either of these projects, this is because I signed a NDA with 
+Null_X Studio (Survive Anton Chigurh's Tractor) and I have deleted everything I had from Blood Debt Gun System from my PC. Because of this, I've listed them as previous experience rather than a full showcases. The projects shown earlier in this portfolio are my work that I can directly provide.
