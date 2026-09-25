@@ -26,7 +26,7 @@ This is a working portal where you can actually see the other side! I built it f
 
 ### Showcase & Mechanics
 
-> 🔗 **[Click Here to Watch the Portal Showcase](https://medal.tv/games/roblox/clips/nAEdFZa0b5uy4qNvv?invite=cr-MSxnS3ksNDI3MTQwMjg3)**
+> 🔗 **[Click Here to Watch the Portal Showcase](https://medal.tv/games/roblox/clips/nAEjE85ifakJekGnp?invite=cr-MSw2bXIsNDI3MTQwMjg3)**
 ---
 
 ### Portal Development Logs & Solved Bottlenecks
@@ -59,7 +59,7 @@ Click any of the links below to view some the main full scripts used in the crea
 I created an accurate, physics based drone platform built from scratch. The system controls manual rigid body kinematics, a real time ground tracking feature, and strict server safety features to ensure the drone runs smoothly in active servers.
 
 ### Showcase & Mechanics
-> 🔗 **[Click Here to Watch the Security Drone Flight Showcase](https://medal.tv/games/roblox/clips/nAEjE85ifakJekGnp?invite=cr-MSw2bXIsNDI3MTQwMjg3)**
+> 🔗 **[Click Here to Watch the Security Drone Flight Showcase](https://medal.tv/games/roblox/clips/nAEdFZa0b5uy4qNvv?invite=cr-MSxnS3ksNDI3MTQwMjg3 )**
 
 ---
 
