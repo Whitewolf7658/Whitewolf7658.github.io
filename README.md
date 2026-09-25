@@ -27,7 +27,6 @@ This is a working portal where you can actually see the other side! I built it f
 ### Showcase & Mechanics
 
 > 🔗 **[Click Here to Watch the Portal Showcase](https://medal.tv/games/screen-capture/clips/nAWRFFYqugyyWB-mL?invite=cr-MSwyZzUsNDI3MTQwMjg3)**
-
 > Note: Clip Runs smoother on website
 
 ---
@@ -63,7 +62,6 @@ I created an accurate, physics based drone platform built from scratch. The syst
 
 ### Showcase & Mechanics
 > 🔗 **[Click Here to Watch the Security Drone Flight Showcase](https://medal.tv/games/screen-capture/clips/nAWJQR6hVfKJZhuxB?invite=cr-MSw1eVEsNDI3MTQwMjg3)**
-
 > Note: Clip Runs smoother on website
 
 ---
