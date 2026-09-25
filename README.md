@@ -26,7 +26,7 @@ This is a working portal where you can actually see the other side! I built it f
 
 ### Showcase & Mechanics
 
-> 🔗 **[Click Here to Watch the Portal Showcase](https://medal.tv/games/roblox/clips/nAEjE85ifakJekGnp?invite=cr-MSw2bXIsNDI3MTQwMjg3)**
+> 🔗 **[Click Here to Watch the Portal Showcase](https://medal.tv/games/screen-capture/clips/nAWRFFYqugyyWB-mL?invite=cr-MSwyZzUsNDI3MTQwMjg3)**
 ---
 
 ### Portal Development Logs & Solved Bottlenecks
@@ -45,8 +45,8 @@ This system underwent multiple revisions to identify and eliminate edge cases, v
 
 ---
 
-###  Portal System Source Code
-Click any of the links below to view some the main full scripts used in the creation of the Portal system.
+###  Portal System Code
+Click any of the links below to view the core scripts utilized.
 
 * 📄 **[View Source: Math & Coordinate Matrix Library (PortalMath)](./scripts/portal-math.md)**
 * 📄 **[View Source: Player Teleportation & Camera Handoff Client](./scripts/portal-traversal.md)**
@@ -55,11 +55,11 @@ Click any of the links below to view some the main full scripts used in the crea
 
 ---
 
-## Project 2: Optimized Security Drone (Drone System)
+## Project 2: Security Drone (Drone System)
 I created an accurate, physics based drone platform built from scratch. The system controls manual rigid body kinematics, a real time ground tracking feature, and strict server safety features to ensure the drone runs smoothly in active servers.
 
 ### Showcase & Mechanics
-> 🔗 **[Click Here to Watch the Security Drone Flight Showcase](https://medal.tv/games/roblox/clips/nAEdFZa0b5uy4qNvv?invite=cr-MSxnS3ksNDI3MTQwMjg3 )**
+> 🔗 **[Click Here to Watch the Security Drone Flight Showcase](https://medal.tv/games/screen-capture/clips/nAWJQR6hVfKJZhuxB?invite=cr-MSw1eVEsNDI3MTQwMjg3)**
 
 ---
 
@@ -82,8 +82,8 @@ I created an accurate, physics based drone platform built from scratch. The syst
 
 ---
 
-### Drone System Source Code
-Click any of the links below to view the full, documented source files on their own dedicated subpages:
+### Drone System Code
+Click any of the links below to view the core scripts utilized:
 
 * 📄 **[View Source: Drone Flight Server Framework (DroneFlightServer)](./scripts/drone-server.md)**
 * 📄 **[View Source: Drone Flight Controller Physics Module (FlightController)](./scripts/drone-physics.md)**
