@@ -133,7 +133,7 @@ Below are some additional explanations of the reasoning behind several of the la
 
 The source portal's inverse transform is used to convert the player's world-space position and orientation into coordinates relative to the entrance portal.
 
-Once the position is to be relative to the source portal, the same relative transform can be reconstructed through the destination portal. This is what allows the system to work between portals with different positions and rotations rather than relying on amfixed world-space offset.
+Once the position is expressed to be relative to the source portal, the same relative transform can be reconstructed through the destination portal. This is what allows the system to work between portals with different positions and rotations rather than relying on amfixed world-space offset.
 
 A 180° rotation is also applied between the two portal spaces so that travelling into the front of one portal correctly produces an exit from the front of the other.
 
@@ -175,7 +175,7 @@ The published FlightController contains several closely related components that 
 
 The flight simulation itself also contains tightly coupled behaviour such as movement, orientation, takeoff, landing, ground tracking, return-to-home and state transitions.
 
-For a larger multi programmer production, responsibilities that have been compiled and can be separated cleanly could be moved into their dedicated modules, while the tightly coupled simulation logic would remain together where splitting it would make the system harder to reason about.
+For a larger multi-programmer production, responsibilities that can be separated cleanly could be moved into dedicated modules, while tightly coupled simulation logic would remain together where splitting it would make the system harder to reason about.
 
 The complete project contains additional supporting code that is not included in the portfolio.
 
