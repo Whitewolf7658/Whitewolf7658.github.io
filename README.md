@@ -1,37 +1,60 @@
 # Whitewolf7658
 
-**Contact:** Hwnwx/1257601320635076609 | https://www.roblox.com/users/1660464640/profile
+**Roblox / Luau Programmer**
 
-*Focus Areas: 3D Coordinate Spaces, Custom Physics, Script Optimization, Mathematical Systems, Physics.*
+**Contact:** Hwnwx / 1257601320635076609  
+**Roblox:** [Profile](https://www.roblox.com/users/1660464640/profile)
 
-*Core Strengths: Debugging complex systems, tracking down memory leaks and performance issues, optimizing existing code, and building scalable systems and frameworks.*
+I’m a Roblox/Luau programmer with around three years of experience, primarily focused on technical gameplay systems, custom physics, 3D/CFrame mathematics, networking, optimization and debugging.
 
+My recent work includes a custom portal system capable of transforming players and momentum between arbitrarily oriented spaces, and a physics-based security drone with custom flight behaviour, client/server networking, deployment, cameras and failsafe systems.
+
+
+## Featured Projects
+
+### Quantum Portal System
+A custom portal system built around coordinate space transformations, real time portal rendering and momentum preserving traversal.
+
+**Highlights:**
+- Arbitrarily oriented portal transformations
+- Linear and angular momentum transformation
+- Portal crossing and re-entry handling
+- Real time ViewportFrame world rendering
+- Camera transformation between portal spaces
+- Character and terrain rendering
+- Render and workspace optimization
+
+> 🔗 **[Portal Showcase](https://medal.tv/games/screen-capture/clips/nAWRFFYqugyyWB-mL?invite=cr-MSwyZzUsNDI3MTQwMjg3)**
+ * 📄 **[View Source: Math & Coordinate Matrix Library (PortalMath)](./scripts/portal-math.md)**
+* 📄 **[View Source: Player Teleportation & Camera Handoff Client](./scripts/portal-traversal.md)**
+* 📄 **[View Source: Procedural Ring Particle & Lighting Effects](./scripts/portal-vfx.md)**
+* 📄 **[View Source: Viewport World Streaming & Terrain Extraction Client](./scripts/portal-render.md)**
+---
+
+### Security Drone System
+
+A physics-based controllable drone built around custom flight behaviour, server authoritative gameplay and a complete deployment lifecycle.
+
+**Highlights:**
+- Custom force-based flight controller
+- Acceleration, drag, banking and ground tracking
+- Takeoff, landing and return-to-home behaviour
+- Client/server command validation
+- Local prediction for responsive interactions
+- Multiple camera perspectives
+- Deployment, packing and redeployment
+- Failsafe and operational state handling
+
+
+> 🔗 **[Security Drone Showcase](https://medal.tv/games/screen-capture/clips/nAWJQR6hVfKJZhuxB?invite=cr-MSw1eVEsNDI3MTQwMjg3)**
+* 📄 **[View Source: Drone Flight Server (DroneFlightServer)](./scripts/drone-server.md)**
+* 📄 **[View Source: Drone Flight Controller Physics Module (FlightController)](./scripts/drone-physics.md)**
+
+> **Source Note:** The code provided in this portfolio consists of selected portions of the full project codebases. Some of the closely related Drone components have been consolidated into a single source page for an easier review. Additional supporting systems and project code have been kept private.
 
 ---
 
-## About Me!
-
-When I first tried making my own game back in early 2023, I was pretty quickly introduced into just how complicated Roblox Studio looked and how confusing scripting was at the time. I was completely clueless about basically everything, from using Studio properly to understanding how different systems work, how they were built and how they communicated eventually with each other.
-
-Instead of giving up, I tried focusing on actually learning how programming/scripting worked. I decided I was going to try dedicate some time each day to learning, in turn I ended up spending countless days learning the basics and slowly started making progress, but eventually reached a point where I frankly didn't know what I was supposed to learn next, I was at a complete stalemate. After some time I decided I'd try reaching out to some friends to see if they had anything to say, and one of them ended up introducing me to a small group of experienced programmers and computer science students in university who became my mentors. They helped me understand the more difficult mathematical and backend concepts that I was struggling to learn by myself.
-
-For almost the last three years, I've tried to dedicate around 2–3 hours a day to improving my scripting. Most of my learning follows the same process: learn a concept, try implementing it myself in Luau, find what I've done wrong, debug it, and then apply it to an actual Roblox system, Then try again. This is how I've worked through things like rotated 3D spaces, object intersections, custom physics and momentum.
-
-The two systems below are the result of that process. With the exception of the Drone and Ring models/assets, all of the scripting is my own. My mentors were a massive help in teaching me, but the actual implementation and debugging was done entirely by me. It took me roughly around five months of development to finish both, with a lot of that time spent dealing with physics edge cases, networking, memory leaks and performance problems.
-
-*I also created the SFX for both the Portal and Drone.*
-
-## Project 1: The Quantum Portal System (Taken some inspiration from the Dr Strange Portal, hence the ring)
-This is a working portal where you can actually see the other side! I built it from scratch to handle things like 3D physics momentum, player tracking across frames, and smooth rendering illusions between things called unaligned spaces. 
-
-### Showcase & Mechanics
-
-> 🔗 **[Click Here to Watch the Portal Showcase](https://medal.tv/games/screen-capture/clips/nAWRFFYqugyyWB-mL?invite=cr-MSwyZzUsNDI3MTQwMjg3)**
-> Note: Clip Runs smoother on website
-
----
-
-### Portal Development Logs & Solved Bottlenecks
+## Portal Development & Problems Solved
 This system underwent multiple revisions to identify and eliminate edge cases, visual artifacts, and CPU performance drops. Below are the core technical problems solved during development:
 
 * **Virtual Camera Obstruction:** Moving the viewport camera backwards improved the depth of the portal view as I had intended it to do, but it also caused the wall behind the portal in which I was exiting out of to become visible. After some testing I fixed this by hiding the host wall only within the ViewportFrame.
@@ -44,29 +67,9 @@ This system underwent multiple revisions to identify and eliminate edge cases, v
 * **Workspace Scanning:** Earlier versions repeatedly searched through large sections of the workspace to find parts that needed updating. I replaced this with cached references between the original parts and their viewport clones, removing the need to constantly search for them again.
 * **Terrain Blockiness:** When I attempted to implement the ability to view terrain in the Portal, I tried to create a terrain extraction system. My first attempted produced noticeably stepped terrain around curved surfaces. I stepped in and reduced this by using a 4-stud surface resolution and only generated the visible outer terrain instead of unnecessary interior voxels.
 
-
 ---
 
-###  Portal System Code
-Click any of the links below to view the core scripts utilized.
-
-* 📄 **[View Source: Math & Coordinate Matrix Library (PortalMath)](./scripts/portal-math.md)**
-* 📄 **[View Source: Player Teleportation & Camera Handoff Client](./scripts/portal-traversal.md)**
-* 📄 **[View Source: Procedural Ring Particle & Lighting Effects](./scripts/portal-vfx.md)**
-* 📄 **[View Source: Viewport World Streaming & Terrain Extraction Client](./scripts/portal-render.md)**
-
----
-
-## Project 2: Security Drone (Drone System)
-I created an accurate, physics based drone platform built from scratch. The system controls manual rigid body kinematics, a real time ground tracking feature, and strict server safety features to ensure the drone runs smoothly in active servers.
-
-### Showcase & Mechanics
-> 🔗 **[Click Here to Watch the Security Drone Flight Showcase](https://medal.tv/games/screen-capture/clips/nAWJQR6hVfKJZhuxB?invite=cr-MSw1eVEsNDI3MTQwMjg3)**
-> Note: Clip Runs smoother on website
-
----
-
-### Drone Development Logs & Solved Bottlenecks
+## Drone Development & Problems Solved
 
 * **Duplicate Flashlight Input:** The floodlight was originally being controlled by both the flight and camera scripts, this in turn caused an inconsistent toggling when F was pressed. To fix this I removed the duplicate input handling and made the camera client the only script responsible for the flashlight's input.
 * **Flashlight Response Delay:** The floodlight originally waited for the server state to replicate before turning on, this resulted in the light feeling slightly delayed. After seeing what might work, I added local prediction so the light turns on immediately. All while the server still validates and controls the actual state.
@@ -81,15 +84,7 @@ I created an accurate, physics based drone platform built from scratch. The syst
 * **Placement Rotation Drift:** In the earlier versions of the drone, It recalculated the preview rotation from the player's character direction every frame, this meant that simply turning the character would rotate the drone's placement preview. I changed it so the starting direction is captured once when the deployer is equipped, and rotation only changes when `R` is pressed.
 * **Camera Script Failure:** One version of the camera client became corrupted and stopped the drone camera system from working entirely. I restored the last working version and made the later fixes separately instead of changing several parts of the camera system at once.
 * **HUD Overlap:** Parts of the drone camera HUD overlapped Roblox's built in menu and hotbar. I fixed this by changing those UI elements individually instead of changing the GUI inset behaviour for the entire interface.
-* **Missing Flight Remotes:** During one of my tests, the deployment script accidentally replaced the actual flight server, meaning that the remotes the drone was using such as FlightInput and DroneLoo` were no longer being created. Once I discovered this bug I separated the deployment and flight scripts again so they each handle their own part of the system.
-
----
-
-### Drone System Code
-Click any of the links below to view the core scripts utilized:
-
-* 📄 **[View Source: Drone Flight Server Framework (DroneFlightServer)](./scripts/drone-server.md)**
-* 📄 **[View Source: Drone Flight Controller Physics Module (FlightController)](./scripts/drone-physics.md)**
+* **Missing Flight Remotes:** During one of my tests, the deployment script accidentally replaced the actual flight server, meaning that the remotes the drone was using such as FlightInput and DroneLook were no longer being created. Once I discovered this bug I separated the deployment and flight scripts again so they each handle their own part of the system.
 
 ---
 
@@ -116,5 +111,45 @@ I was responsible for the large majority of the scripting behind the gun system.
 
 A significant amount of the gun system's code was written by me, with a lot of my later work going towards tracking down bugs and fixing issues with the weapon mechanics.
 
-> **Note:** I am no longer associated with either projects nor do I have access to the Dev Studios, project files, or screenshots from either of these projects, this is because I signed a NDA with 
-Null_X Studio (Survive Anton Chigurh's Tractor) and I have deleted everything I had from Blood Debt Gun System from my PC. Because of this, I've listed them as previous experience rather than a full showcases. The projects shown earlier in this portfolio are my work that I can directly provide.
+> **Note:** I am no longer associated with either project and no longer have access to their Studio files, source code or development materials. My work on Survive Anton Chigurh's Tractor was covered by an NDA with Null_X Studio, and I no longer have files from the Blood Debt gun system. Because of this, I have listed these projects as previous experience rather than full portfolio showcases. The Portal and Drone projects above are work that I can directly demonstrate and provide source code for.
+
+
+---
+
+## Technical Notes
+
+Below are a few short explanations of some of the more technical systems used in the projects above.
+
+### Portal Coordinate Transformation
+
+The portal system works by first converting a player's position or `CFrame` into the source portal's local coordinate space. The relative position and orientation can then be transformed through the portal pair and reconstructed using the destination portal's coordinate space.
+
+This allows the system to preserve where the player is relative to the portal rather than simply teleporting them to a fixed point. It also means portals can be placed at different rotations and orientations while still producing consistent traversal.
+
+### Momentum Preservation
+
+When something passes through a portal, keeping its original world-space velocity would produce incorrect movement when the destination portal is rotated differently.
+
+Instead, the velocity is transformed through the same portal-space rotation used for traversal. This means movement relative to the entrance portal is converted into the corresponding direction at the destination.
+
+For example, downward momentum entering a portal on the floor can become forward momentum if the destination portal is mounted vertically.
+
+### Portal Crossing Detection
+
+The traversal system does not simply check whether a player is touching a portal.
+
+It tracks the player's position relative to the portal plane and detects when they move from one side of that plane to the other while inside the portal opening.
+
+Earlier versions switched state directly around `Z = 0`, which caused rapid flickering near the threshold. I separated the crossing thresholds slightly so small frame-to-frame position changes do not repeatedly trigger the traversal logic.
+
+### Client Prediction and Server Validation
+
+Some drone interactions are updated locally before the server response arrives so controls feel immediate.
+
+For example, the floodlight can visually change state on the client as soon as the player presses the input, while the command is still sent to the server for validation.
+
+The server remains responsible for deciding whether the action is actually valid. Important drone commands also check things such as whether the drone is currently deployed before being accepted.
+
+This keeps the controls responsive without relying on the client as the authority for important gameplay state.
+
+---
