@@ -1,6 +1,6 @@
 [← Back to Home](../README.md)
 
-Portal Math & Coordinate Transformation
+# Portal Math & Coordinate Transformation
 
 This module is used to handle the transformation math between both portals (Portal A & Portal B), this includes CFrame, position and it's velocity transformations. It also handles the portal's coordinate mapping and it's crossing detection which is used to determine when something has actually passed through the portal.
 
