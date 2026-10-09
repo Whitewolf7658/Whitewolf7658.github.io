@@ -12,6 +12,8 @@ My recent work includes a custom portal system capable of transforming players a
 ## Portfolio Overview
 
 - [Featured Projects](#featured-projects)
+  - [Quantum Portal System](#quantum-portal-system)
+  - [Security Drone System](#security-drone-system)
 - [Portal Development & Problems Solved](#portal-development--problems-solved)
 - [Drone Development & Problems Solved](#drone-development--problems-solved)
 - [Previous Roblox Development Experience](#previous-roblox-development-experience)
