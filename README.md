@@ -11,17 +11,11 @@ My recent work includes a custom portal system capable of transforming players a
 
 ## Portfolio Overview
 
-1. **Featured Projects**  
-   Quick overview of the Portal and Drone systems with showcase videos and source links.
-
-2. **Development & Problems Solved**  
-   Key bugs, performance issues and technical problems encountered during development.
-
-3. **Previous Roblox Development Experience**  
-   Prior work on released Roblox experiences and gameplay systems.
-
-4. **Technical Notes & Design Decisions**  
-   Explanations of the reasoning behind some of the more important code, architecture and networking decisions.
+- [Featured Projects](#featured-projects)
+- [Portal Development & Problems Solved](#portal-development--problems-solved)
+- [Drone Development & Problems Solved](#drone-development--problems-solved)
+- [Previous Roblox Development Experience](#previous-roblox-development-experience)
+- [Technical Notes & Design Decisions](#technical-notes--design-decisions)
 
 ## Featured Projects
 
