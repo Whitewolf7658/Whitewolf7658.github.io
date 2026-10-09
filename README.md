@@ -9,6 +9,19 @@ I’m a Roblox/Luau programmer with around three years of experience, primarily 
 
 My recent work includes a custom portal system capable of transforming players and momentum between arbitrarily oriented spaces, and a physics-based security drone with custom flight behaviour, client/server networking, deployment, cameras and failsafe systems.
 
+## Portfolio Overview
+
+1. **Featured Projects**  
+   Quick overview of the Portal and Drone systems with showcase videos and source links.
+
+2. **Development & Problems Solved**  
+   Key bugs, performance issues and technical problems encountered during development.
+
+3. **Previous Roblox Development Experience**  
+   Prior work on released Roblox experiences and gameplay systems.
+
+4. **Technical Notes & Design Decisions**  
+   Explanations of the reasoning behind some of the more important code, architecture and networking decisions.
 
 ## Featured Projects
 
@@ -153,3 +166,67 @@ The server remains responsible for deciding whether the action is actually valid
 This keeps the controls responsive without relying on the client as the authority for important gameplay state.
 
 ---
+
+## Technical Notes & Design Decisions
+
+Below are some additional explanations of the reasoning behind several of the larger technical decisions in the projects above.
+
+### Why does the portal transform through the source portal's local space?
+
+The source portal's inverse transform is used to convert the player's world-space position and orientation into coordinates relative to the entrance portal.
+
+Once the position is to be relative to the source portal, the same relative transform can be reconstructed through the destination portal. This is what allows the system to work between portals with different positions and rotations rather than relying on amfixed world-space offset.
+
+A 180° rotation is also applied between the two portal spaces so that travelling into the front of one portal correctly produces an exit from the front of the other.
+
+### Why transform velocity instead of keeping the player's original velocity?
+
+Velocity is directional, so keeping the original world-space velocity would produce incorrect behaviour when the destination portal has a different orientation.
+
+The player's linear and angular velocity are instead transformed through the portals in the same way as their orientation.
+
+This means momentum is preserved relative to the portals. For example, downward movement through a floor portal can become forward movement when exiting from a vertical portal.
+
+### Why not simply teleport when the player touches the portal?
+
+Touch detection alone does not tell the system whether the player actually crossed through the portal.
+
+The traversal system instead tracks the player's position relative to the portal and detects when they move from one side of the plane to the other while inside the portal opening.
+
+Earlier versions used a single threshold around `Z = 0`, but small position changes between frames could repeatedly switch the detected side. I separated the thresholds slightly to prevent this flickering. 
+
+### Why use local prediction if the server is authoritative?
+
+Waiting for every server response before visually updating an interaction can make controls feel delayed.
+
+For interactions such as the drone floodlight, the client can update the visual state immediately while the command is sent to the server.
+
+The server still validates the command and remains responsible for the actual gameplay state. This gives the player immediate feedback without treating the client as trusted authority.
+
+### What prevents a client from controlling a packed or inactive drone?
+
+Disabling the controls on the client is not enough because a modified client could still manually fire the RemoteEvents.
+
+The server therefore performs its own deployment and ownership checks before accepting drone commands.
+
+The same general rule is used throughout the system: client checks improve usability, while server checks determine whether an action is actually allowed.
+
+### Why is the FlightController so large?
+
+The published FlightController contains several closely related components that were consolidated into one source page for a portfolio review.
+
+The flight simulation itself also contains tightly coupled behaviour such as movement, orientation, takeoff, landing, ground tracking, return-to-home and state transitions.
+
+For a larger multi programmer production, responsibilities that have been compiled and can be separated cleanly could be moved into their dedicated modules, while the tightly coupled simulation logic would remain together where splitting it would make the system harder to reason about.
+
+The complete project contains additional supporting code that is not included in the portfolio.
+
+### How would I approach working inside an existing codebase?
+
+When working with an existing system, I try to understand the current behaviour and architecture before changing it.
+
+I normally trace where the relevant state originates, how it moves between scripts, and what other systems depend on it before making the smallest change necessary to solve the problem.
+
+Afterwards I test the behaviour around the change as well as the original bug so that fixing one issue does not unintentionally create another.
+
+A large part of my previous Roblox development work involved debugging, maintaining and modifying existing gameplay systems rather than only building new systems from scratch.
