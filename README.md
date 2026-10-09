@@ -125,44 +125,6 @@ A significant amount of the gun system's code was written by me, with a lot of m
 
 ---
 
-## Technical Notes
-
-Below are a few short explanations of some of the more technical systems used in the projects above.
-
-### Portal Coordinate Transformation
-
-The portal system works by first converting a player's position or `CFrame` into the source portal's local coordinate space. The relative position and orientation can then be transformed through the portal pair and reconstructed using the destination portal's coordinate space.
-
-This allows the system to preserve where the player is relative to the portal rather than simply teleporting them to a fixed point. It also means portals can be placed at different rotations and orientations while still producing consistent traversal.
-
-### Momentum Preservation
-
-When something passes through a portal, keeping its original world-space velocity would produce incorrect movement when the destination portal is rotated differently.
-
-Instead, the velocity is transformed through the same portal-space rotation used for traversal. This means movement relative to the entrance portal is converted into the corresponding direction at the destination.
-
-For example, downward momentum entering a portal on the floor can become forward momentum if the destination portal is mounted vertically.
-
-### Portal Crossing Detection
-
-The traversal system does not simply check whether a player is touching a portal.
-
-It tracks the player's position relative to the portal plane and detects when they move from one side of that plane to the other while inside the portal opening.
-
-Earlier versions switched state directly around `Z = 0`, which caused rapid flickering near the threshold. I separated the crossing thresholds slightly so small frame-to-frame position changes do not repeatedly trigger the traversal logic.
-
-### Client Prediction and Server Validation
-
-Some drone interactions are updated locally before the server response arrives so controls feel immediate.
-
-For example, the floodlight can visually change state on the client as soon as the player presses the input, while the command is still sent to the server for validation.
-
-The server remains responsible for deciding whether the action is actually valid. Important drone commands also check things such as whether the drone is currently deployed before being accepted.
-
-This keeps the controls responsive without relying on the client as the authority for important gameplay state.
-
----
-
 ## Technical Notes & Design Decisions
 
 Below are some additional explanations of the reasoning behind several of the larger technical decisions in the projects above.
