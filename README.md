@@ -19,6 +19,8 @@ My recent work includes a custom portal system capable of transforming players a
 - [Previous Roblox Development Experience](#previous-roblox-development-experience)
 - [Technical Notes & Design Decisions](#technical-notes--design-decisions)
 
+> **IMPORTANT NOTE:** The code in this portfolio has been reformatted from its original layout to be easily readable. Code pages show selected portions of larger scripts rather than the full implementation, additional supporting code is not shown here.
+
 ## Featured Projects
 
 ### Quantum Portal System
@@ -58,8 +60,6 @@ A physics-based controllable drone built around custom flight behaviour, server 
 > 🔗 **[Security Drone Showcase](https://medal.tv/games/screen-capture/clips/nAWJQR6hVfKJZhuxB?invite=cr-MSw1eVEsNDI3MTQwMjg3)**
 * 📄 **[View Source: Drone Flight Server (DroneFlightServer)](./scripts/drone-server.md)**
 * 📄 **[View Source: Drone Flight Controller Physics Module (FlightController)](./scripts/drone-physics.md)**
-
-> **Source Note:** The code provided in this portfolio consists of selected portions of the full project codebases. Some of the closely related Drone components have been consolidated into a single source page for an easier review. Additional supporting systems and project code have been kept private.
 
 ---
 
