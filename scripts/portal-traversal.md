@@ -2,770 +2,292 @@
 
 # Player Teleportation & Camera Handoff Client
 
-This is the client side system I built to help keep the transition between portals smooth and manageable. It does this by tracking the player's position between frames, it then sets up a local bounding box used to disable wall collisions while the player is passing through, and it then handles the camera handoff through RenderStepped to prevent the player's camera from jittering during the teleportation.
+Handles player movement through paired portals, including crossing detection, collision bypass, velocity transformation and camera handoff.
 
+Selected portions of `PortalTraversal`. The full client also includes portal lookup, character checks and cleanup.
 
-```lua
-local Players =
-	game:GetService("Players")
+## Portal opening detection
 
-local RunService =
-	game:GetService("RunService")
+Portion of `nearPortalOpening()`. Checks the player's position in the portal's local space before allowing collision bypass.
 
-local ReplicatedStorage =
-	game:GetService("ReplicatedStorage")
+```luau
+local function nearPortalOpening(root, portal)
+    local localPosition = PortalMath.ToPortalSpace(root.Position, portal)
 
-local player =
-	Players.LocalPlayer
+    if math.abs(localPosition.Z) > APERTURE_DISTANCE then
+        return false
+    end
 
-local portalSystem =
-	ReplicatedStorage:WaitForChild(
-		"PortalSystem"
-	)
+    if localPosition.Z < -0.85 then
+        return false
+    end
 
-local PortalMath =
-	require(
-		portalSystem:WaitForChild(
-			"PortalMath"
-		)
-	)
+    local halfWidth = portal.Size.X * 0.5
+    local halfHeight = portal.Size.Y * 0.5
+    local horizontalPadding = 0.7
+    local verticalPadding = 1.75
 
-local portalFolder =
-	workspace:WaitForChild(
-		"ActivePortals"
-	)
+    if math.abs(localPosition.X) > halfWidth + horizontalPadding then
+        return false
+    end
 
-local WIDTH_PADDING =
-	0.35
+    if math.abs(localPosition.Y) > halfHeight + verticalPadding then
+        return false
+    end
 
-local HEIGHT_PADDING =
-	1.25
+    return true
+end
+```
 
-local APERTURE_DISTANCE =
-	3.0
+## Collision bypass
 
-local EXIT_EPSILON =
-	0.35
+Portions of `restoreWall()`, `bypassWall()` and `updateApertureCollision()`. Temporarily disables collision on the portal's host wall and restores its original state when the player moves away.
 
-local REENTRY_DISTANCE =
-	1.5
+```luau
+local function restoreWall(wall)
+    local original = bypassedWalls[wall]
 
-local previousPosition =
-	nil
+    if original == nil then
+        return
+    end
 
-local blockedPortal =
-	nil
+    if wall and wall.Parent then
+        wall.CanCollide = original
+    end
 
-local bypassedWalls =
-	{}
-
-local function getPortal(
-	portalType
-)
-
-	return portalFolder:FindFirstChild(
-		"Portal_"
-			.. player.UserId
-			.. "_"
-			.. portalType
-	)
-
+    bypassedWalls[wall] = nil
 end
 
-local function getCharacter()
+local function bypassWall(wall)
+    if not wall or not wall:IsA("BasePart") then
+        return
+    end
 
-	local character =
-		player.Character
+    if bypassedWalls[wall] == nil then
+        bypassedWalls[wall] = wall.CanCollide
+    end
 
-	if not character then
-		return nil
-	end
-
-	local humanoid =
-		character:FindFirstChildOfClass(
-			"Humanoid"
-		)
-
-	local root =
-		character:FindFirstChild(
-			"HumanoidRootPart"
-		)
-
-	if not humanoid
-		or not root
-		or humanoid.Health <= 0 then
-
-		return nil
-	end
-
-	return character,
-		humanoid,
-		root
-
+    wall.CanCollide = false
 end
 
-local function getHostSurface(
-	portal
-)
+local function updateApertureCollision(root, portalA, portalB)
+    local wantedWalls = {}
 
-	if not portal then
-		return nil
-	end
+    if portalA and nearPortalOpening(root, portalA) then
+        local host = getHostSurface(portalA)
 
-	local value =
-		portal:FindFirstChild(
-			"HostSurface"
-		)
+        if host then
+            wantedWalls[host] = true
+        end
+    end
 
-	if not value
-		or not value:IsA(
-			"ObjectValue"
-		) then
+    if portalB and nearPortalOpening(root, portalB) then
+        local host = getHostSurface(portalB)
 
-		return nil
-	end
+        if host then
+            wantedWalls[host] = true
+        end
+    end
 
-	local host =
-		value.Value
+    local restoreList = {}
 
-	if not host
-		or not host:IsA(
-			"BasePart"
-		) then
+    for wall in pairs(bypassedWalls) do
+        if not wantedWalls[wall] then
+            table.insert(restoreList, wall)
+        end
+    end
 
-		return nil
-	end
+    for _, wall in ipairs(restoreList) do
+        restoreWall(wall)
+    end
 
-	if not host:IsDescendantOf(
-		workspace
-		) then
+    for wall in pairs(wantedWalls) do
+        bypassWall(wall)
+    end
+end
+```
 
-		return nil
-	end
+## Teleportation and camera handoff
 
-	return host
+Portions of `pushOutsideDestination()` and `traverse()`. Transforms the character's position and momentum, places them clear of the exit plane and preserves the camera's offset for the handoff frame.
 
+```luau
+local function pushOutsideDestination(cframe, destination)
+    local localCF = destination.CFrame:ToObjectSpace(cframe)
+    local position = localCF.Position
+
+    if position.Z < EXIT_EPSILON then
+        position = Vector3.new(position.X, position.Y, EXIT_EPSILON)
+    end
+
+    local rotation = localCF.Rotation
+
+    return destination.CFrame * CFrame.new(position) * rotation
 end
 
-local function nearPortalOpening(
-	root,
-	portal
-)
+local function traverse(character, root, source, destination)
+    local oldCFrame = root.CFrame
+    local currentCamera = workspace.CurrentCamera
+    local cameraRelativeToRoot = nil
 
-	local localPosition =
-		PortalMath.ToPortalSpace(
-			root.Position,
-			portal
-		)
+    if currentCamera then
+        cameraRelativeToRoot = oldCFrame:ToObjectSpace(currentCamera.CFrame)
+    end
 
-	if math.abs(
-		localPosition.Z
-		) > APERTURE_DISTANCE then
+    local oldLinearVelocity = root.AssemblyLinearVelocity
+    local oldAngularVelocity = root.AssemblyAngularVelocity
 
-		return false
-	end
+    local transformed = PortalMath.TransformPhysics(
+        oldCFrame,
+        oldLinearVelocity,
+        oldAngularVelocity,
+        source,
+        destination
+    )
 
-	if localPosition.Z <
-		-0.85 then
+    local targetCFrame = pushOutsideDestination(transformed.CFrame, destination)
 
-		return false
-	end
+    character:PivotTo(targetCFrame)
 
-	local halfWidth =
-		portal.Size.X * 0.5
+    if currentCamera and cameraRelativeToRoot then
+        local cameraHandoffCFrame = root.CFrame * cameraRelativeToRoot
+        currentCamera.CFrame = cameraHandoffCFrame
 
-	local halfHeight =
-		portal.Size.Y * 0.5
+        local bindName = "PortalCameraHandoff_" .. tostring(os.clock())
 
-	local horizontalPadding =
-		0.7
+        RunService:BindToRenderStep(
+            bindName,
+            Enum.RenderPriority.Camera.Value + 1,
+            function()
+                if not root.Parent or workspace.CurrentCamera ~= currentCamera then
+                    RunService:UnbindFromRenderStep(bindName)
+                    return
+                end
 
-	local verticalPadding =
-		1.75
+                currentCamera.CFrame = root.CFrame * cameraRelativeToRoot
+                RunService:UnbindFromRenderStep(bindName)
+            end
+        )
+    end
 
-	if math.abs(
-		localPosition.X
-		) > halfWidth
-			+ horizontalPadding then
+    root.AssemblyLinearVelocity = transformed.LinearVelocity
+    root.AssemblyAngularVelocity = transformed.AngularVelocity
 
-		return false
-	end
+    blockedPortal = destination
+    previousPosition = root.Position
 
-	if math.abs(
-		localPosition.Y
-		) > halfHeight
-			+ verticalPadding then
+    print(
+        "[PortalPhysics] CROSS",
+        source.Name,
+        "->",
+        destination.Name,
+        "| speed:",
+        math.round(transformed.LinearVelocity.Magnitude * 100) / 100
+    )
+end
+```
 
-		return false
-	end
+## Crossing and re-entry handling
 
-	return true
+Portions of `updateBlockedPortal()` and `checkCrossing()`. Uses the movement segment to detect a front-to-back crossing and prevents immediate re-entry after teleporting.
 
+```luau
+local function updateBlockedPortal(root)
+    if not blockedPortal then
+        return
+    end
+
+    if not blockedPortal.Parent then
+        blockedPortal = nil
+        return
+    end
+
+    local localPosition = PortalMath.ToPortalSpace(root.Position, blockedPortal)
+
+    if math.abs(localPosition.Z) >= REENTRY_DISTANCE then
+        blockedPortal = nil
+    end
 end
 
-local function restoreWall(
-	wall
-)
+local function checkCrossing(character, root, source, destination, oldPosition, newPosition)
+    if source == blockedPortal then
+        return false
+    end
 
-	local original =
-		bypassedWalls[
-	wall
-	]
+    local crossing = PortalMath.GetCrossing(
+        oldPosition,
+        newPosition,
+        source,
+        WIDTH_PADDING,
+        HEIGHT_PADDING
+    )
 
-	if original == nil then
-		return
-	end
+    if not crossing then
+        return false
+    end
 
-	if wall
-		and wall.Parent then
+    if crossing.PreviousLocal.Z <= 0 then
+        return false
+    end
 
-		wall.CanCollide =
-			original
-	end
+    if crossing.CurrentLocal.Z >= 0 then
+        return false
+    end
 
-	bypassedWalls[
-	wall
-	] =
-		nil
+    traverse(character, root, source, destination)
 
+    return true
 end
+```
 
-local function restoreAllWalls()
+## Per-frame traversal checks
 
-	local walls =
-		{}
+Portion of the `PreSimulation` connection. Tracks movement between frames, updates wall collision and tests each direction through the portal pair.
 
-	for wall in pairs(
-		bypassedWalls
-		) do
-
-		table.insert(
-			walls,
-			wall
-		)
-
-	end
-
-	for _, wall in ipairs(
-		walls
-		) do
-
-		restoreWall(
-			wall
-		)
-
-	end
-
-end
-
-local function bypassWall(
-	wall
-)
-
-	if not wall
-		or not wall:IsA(
-			"BasePart"
-		) then
-
-		return
-	end
-
-	if bypassedWalls[
-		wall
-		] == nil then
-
-		bypassedWalls[
-		wall
-		] =
-			wall.CanCollide
-
-	end
-
-	wall.CanCollide =
-		false
-
-end
-
-local function updateApertureCollision(
-	root,
-	portalA,
-	portalB
-)
-
-	local wantedWalls =
-		{}
-
-	if portalA
-		and nearPortalOpening(
-			root,
-			portalA
-		) then
-
-		local host =
-			getHostSurface(
-				portalA
-			)
-
-		if host then
-
-			wantedWalls[
-			host
-			] =
-				true
-
-		end
-
-	end
-
-	if portalB
-		and nearPortalOpening(
-			root,
-			portalB
-		) then
-
-		local host =
-			getHostSurface(
-				portalB
-			)
-
-		if host then
-
-			wantedWalls[
-			host
-			] =
-				true
-
-		end
-
-	end
-
-	local restoreList =
-		{}
-
-	for wall in pairs(
-		bypassedWalls
-		) do
-
-		if not wantedWalls[
-			wall
-			] then
-
-			table.insert(
-				restoreList,
-				wall
-			)
-
-		end
-
-	end
-
-	for _, wall in ipairs(
-		restoreList
-		) do
-
-		restoreWall(
-			wall
-		)
-
-	end
-
-	for wall in pairs(
-		wantedWalls
-		) do
-
-		bypassWall(
-			wall
-		)
-
-	end
-
-end
-
-local function pushOutsideDestination(
-	cframe,
-	destination
-)
-
-	local localCF =
-		destination.CFrame:ToObjectSpace(
-			cframe
-		)
-
-	local position =
-		localCF.Position
-
-	if position.Z <
-		EXIT_EPSILON then
-
-		position =
-			Vector3.new(
-				position.X,
-				position.Y,
-				EXIT_EPSILON
-			)
-
-	end
-
-	local rotation =
-		localCF.Rotation
-
-	return destination.CFrame
-		*
-		CFrame.new(
-			position
-		)
-		*
-		rotation
-
-end
-
-local function traverse(
-	character,
-	root,
-	source,
-	destination
-)
-
-	local oldCFrame =
-		root.CFrame
-
-	local currentCamera =
-		workspace.CurrentCamera
-
-	local cameraRelativeToRoot =
-		nil
-
-	if currentCamera then
-
-		cameraRelativeToRoot =
-			oldCFrame:ToObjectSpace(
-				currentCamera.CFrame
-			)
-
-	end
-
-	local oldLinearVelocity =
-		root.AssemblyLinearVelocity
-
-	local oldAngularVelocity =
-		root.AssemblyAngularVelocity
-
-	local transformed =
-		PortalMath.TransformPhysics(
-			oldCFrame,
-			oldLinearVelocity,
-			oldAngularVelocity,
-			source,
-			destination
-		)
-
-	local targetCFrame =
-		pushOutsideDestination(
-			transformed.CFrame,
-			destination
-		)
-
-	character:PivotTo(
-		targetCFrame
-	)
-
-	if currentCamera
-		and cameraRelativeToRoot then
-
-		local cameraHandoffCFrame =
-			root.CFrame
-			*
-			cameraRelativeToRoot
-
-		currentCamera.CFrame =
-			cameraHandoffCFrame
-
-		local bindName =
-			"PortalCameraHandoff_"
-			..
-			tostring(
-				os.clock()
-			)
-
-		RunService:BindToRenderStep(
-			bindName,
-			Enum.RenderPriority.Camera.Value + 1,
-			function()
-
-				if not root.Parent
-					or workspace.CurrentCamera
-					~= currentCamera then
-
-					RunService:UnbindFromRenderStep(
-						bindName
-					)
-
-					return
-				end
-
-				currentCamera.CFrame =
-					root.CFrame
-					*
-					cameraRelativeToRoot
-
-				RunService:UnbindFromRenderStep(
-					bindName
-				)
-
-			end
-		)
-
-	end
-
-	root.AssemblyLinearVelocity =
-		transformed.LinearVelocity
-
-	root.AssemblyAngularVelocity =
-		transformed.AngularVelocity
-
-	blockedPortal =
-		destination
-
-	previousPosition =
-		root.Position
-
-	print(
-		"[PortalPhysics] CROSS",
-		source.Name,
-		"->",
-		destination.Name,
-		"| speed:",
-		math.round(
-			transformed.LinearVelocity.Magnitude
-				*
-				100
-		)
-			/
-			100
-	)
-
-end
-
-local function updateBlockedPortal(
-	root
-)
-
-	if not blockedPortal then
-		return
-	end
-
-	if not blockedPortal.Parent then
-
-		blockedPortal =
-			nil
-
-		return
-	end
-
-	local localPosition =
-		PortalMath.ToPortalSpace(
-			root.Position,
-			blockedPortal
-		)
-
-	if math.abs(
-		localPosition.Z
-		) >= REENTRY_DISTANCE then
-
-		blockedPortal =
-			nil
-
-	end
-
-end
-
-local function checkCrossing(
-	character,
-	root,
-	source,
-	destination,
-	oldPosition,
-	newPosition
-)
-
-	if source ==
-		blockedPortal then
-
-		return false
-	end
-
-	local crossing =
-		PortalMath.GetCrossing(
-			oldPosition,
-			newPosition,
-			source,
-			WIDTH_PADDING,
-			HEIGHT_PADDING
-		)
-
-	if not crossing then
-		return false
-	end
-
-	if crossing.PreviousLocal.Z <= 0 then
-		return false
-	end
-
-	if crossing.CurrentLocal.Z >= 0 then
-		return false
-	end
-
-	traverse(
-		character,
-		root,
-		source,
-		destination
-	)
-
-	return true
-
-end
-
+```luau
 RunService.PreSimulation:Connect(function()
+    local character, humanoid, root = getCharacter()
 
-	local character,
-	humanoid,
-	root =
-		getCharacter()
+    if not character then
+        previousPosition = nil
+        restoreAllWalls()
+        return
+    end
 
-	if not character then
+    local portalA = getPortal("A")
+    local portalB = getPortal("B")
 
-		previousPosition =
-			nil
+    if not portalA or not portalB then
+        previousPosition = root.Position
+        restoreAllWalls()
+        return
+    end
 
-		restoreAllWalls()
+    if portalA:GetAttribute("PortalState") ~= "Open"
+        or portalB:GetAttribute("PortalState") ~= "Open" then
+        previousPosition = root.Position
+        restoreAllWalls()
+        return
+    end
 
-		return
-	end
+    updateApertureCollision(root, portalA, portalB)
+    updateBlockedPortal(root)
 
-	local portalA =
-		getPortal(
-			"A"
-		)
+    local currentPosition = root.Position
 
-	local portalB =
-		getPortal(
-			"B"
-		)
+    if not previousPosition then
+        previousPosition = currentPosition
+        return
+    end
 
-	if not portalA
-		or not portalB then
+    if checkCrossing(character, root, portalA, portalB, previousPosition, currentPosition) then
+        return
+    end
 
-		previousPosition =
-			root.Position
+    if checkCrossing(character, root, portalB, portalA, previousPosition, currentPosition) then
+        return
+    end
 
-		restoreAllWalls()
-
-		return
-	end
-
-	if portalA:GetAttribute(
-		"PortalState"
-		) ~= "Open"
-			or portalB:GetAttribute(
-				"PortalState"
-			) ~= "Open" then
-
-		previousPosition =
-			root.Position
-
-		restoreAllWalls()
-
-		return
-	end
-
-	updateApertureCollision(
-		root,
-		portalA,
-		portalB
-	)
-
-	updateBlockedPortal(
-		root
-	)
-
-	local currentPosition =
-		root.Position
-
-	if not previousPosition then
-
-		previousPosition =
-			currentPosition
-
-		return
-	end
-
-	if checkCrossing(
-		character,
-		root,
-		portalA,
-		portalB,
-		previousPosition,
-		currentPosition
-		) then
-
-		return
-	end
-
-	if checkCrossing(
-		character,
-		root,
-		portalB,
-		portalA,
-		previousPosition,
-		currentPosition
-		) then
-
-		return
-	end
-
-	previousPosition =
-		currentPosition
-
-end)
-
-player.CharacterAdded:Connect(function(
-	character
-)
-
-	restoreAllWalls()
-
-	previousPosition =
-		nil
-
-	blockedPortal =
-		nil
-
-	local root =
-		character:WaitForChild(
-			"HumanoidRootPart"
-		)
-
-	previousPosition =
-		root.Position
-
-end)
-
-player.CharacterRemoving:Connect(function()
-
-	restoreAllWalls()
-
-	previousPosition =
-		nil
-
-	blockedPortal =
-		nil
-
-end)
-
-script.Destroying:Connect(function()
-
-	restoreAllWalls()
-
+    previousPosition = currentPosition
 end)
 ```
