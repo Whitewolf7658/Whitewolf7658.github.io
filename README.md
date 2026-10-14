@@ -19,7 +19,7 @@ My recent work includes a custom portal system capable of transforming players a
 - [Previous Roblox Development Experience](#previous-roblox-development-experience)
 - [Technical Notes & Design Decisions](#technical-notes--design-decisions)
 
-**IMPORTANT NOTE: The code in this portfolio has been reformatted from its original layout to be easily readable. Code pages show selected portions of larger scripts rather than the full implementation, additional supporting code is not shown here.**
+**IMPORTANT NOTE: The code in this portfolio has been reformatted from its original form to be easily readable. Code pages show selected portions of larger scripts rather than the full implementation, additional supporting code is not shown here.**
 
 ## Featured Projects
 
